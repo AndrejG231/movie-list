@@ -9,8 +9,8 @@ class CacheService {
 
   async retrieveWithCache<Data>(
     cacheKey: string, // Access key to the cache
-    caller: () => Data, // Callback for retrieving specific data
-    validator: (data: Data) => boolean // Callback for validating
+    caller: () => Promise<Data>, // Callback for retrieving specific data
+    validator: (data: Data | null | undefined) => data is Data // Callback for validating
   ) {
     const response = await caller()
 
@@ -30,11 +30,9 @@ class CacheService {
         throw new Error("Could not retrieve from cache.")
       }
 
-      cachedData = JSON.parse(cached) as Data
+      cachedData = JSON.parse(cached)
 
-      const isCacheValid = validator(cachedData)
-
-      if (!isCacheValid) {
+      if (!validator(cachedData)) {
         throw new Error("Invalid cache data")
       }
 

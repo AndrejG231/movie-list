@@ -11,7 +11,7 @@ class Api {
     this.instance.interceptors.response.use(
       (res) => {
         if (res.status) {
-          return { ...res, status: 1, error: null }
+          return { data: res.data, status: 1, error: null }
         }
 
         return {
@@ -30,7 +30,7 @@ class Api {
     )
   }
 
-  movieList(): Promise<ApiResponse<IMovie[]>> {
+  movieList = (): Promise<ApiResponse<IMovie[]>> => {
     return this.instance.get("videos.json")
   }
 }
