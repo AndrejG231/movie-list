@@ -1,18 +1,11 @@
-import React, { useCallback, useEffect, useMemo } from "react"
-import styled from "styled-components"
+import { useMemo } from "react"
+import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-
-import {
-  AppDispatch,
-  movieListActions,
-  movieListFiltersSelector,
-  movieListQuerySelector,
-  useMovieListQuery,
-} from "../../store"
-import { useDispatch, useSelector } from "react-redux"
-import { MovieCard } from "../../components/movie-card"
+import styled from "styled-components"
 import { FiltersMenu } from "../../components/filters-menu"
-import { getFilteredMovieList } from "./util"
+import { MovieCard } from "../../components/movie-card"
+import { movieListFiltersSelector, useMovieListQuery } from "../../store"
+import { filterMovieList, sortBySortFilter } from "./util"
 
 const StyledMovieListPage = styled.div`
   width: 100%;
@@ -36,7 +29,10 @@ const MovieListPage = () => {
   const filteredMovies = useMemo(() => {
     if (!data) return null
 
-    return getFilteredMovieList(data, filters)
+    const filtered = filterMovieList(data, filters)
+    const sorted = sortBySortFilter(filtered, filters.sort)
+
+    return sorted
   }, [filters, data])
 
   if (loading) {

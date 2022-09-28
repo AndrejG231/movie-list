@@ -2,42 +2,60 @@ import { IMovie } from "../../services/api"
 import {
   AttributeFilters,
   MovieListFilters,
+  SortFilter,
 } from "../../store/movie-list/types"
 
-const joinFilters = (movie: IMovie, filters: AttributeFilters): boolean => {
+// Check if item properties are matching all specified filters
+const joinFilters = <ItemType extends object>(
+  item: ItemType,
+  filters: AttributeFilters
+): boolean => {
   return Object.entries(filters).reduce((acc, [key, value]) => {
     if (!value) {
       return acc
     }
 
-    if (typeof movie[key as keyof IMovie] === "boolean") {
+    if (!(key in item)) {
+      return false
+    }
+
+    const attribute = key as keyof ItemType
+
+    if (typeof item[attribute] === "boolean") {
       value = Boolean(+value)
     }
 
-    if (typeof movie[key as keyof IMovie] === "number") {
+    if (typeof item[attribute] === "number") {
       value = Number(value)
     }
 
-    return acc && movie[key as keyof IMovie] === value
+    return acc && item[attribute] === value
   }, true)
 }
 
-export const getFilteredMovieList = (
-  movies: IMovie[],
+// Filter out items from array which do not match specified filters
+export const filterMovieList = <ItemType extends { name: string }>(
+  items: ItemType[],
   filters: MovieListFilters
-): IMovie[] => {
-  const filtered = movies.filter(
-    (movie) =>
-      new RegExp(filters.search.value, "gi").test(movie.name) &&
-      joinFilters(movie, filters.attributes)
+): ItemType[] => {
+  return items.filter(
+    (item) =>
+      new RegExp(filters.search.value, "gi").test(item.name) &&
+      joinFilters(item, filters.attributes)
   )
+}
 
-  if (!filters.sort.attr) return filtered
+// Returns new array sorted by SortFilter
+export const sortBySortFilter = <ItemType extends object>(
+  items: ItemType[],
+  filter: SortFilter
+) => {
+  if (!filter.attr) return items
 
-  const key = filters.sort.attr as keyof IMovie
+  const key = filter.attr as keyof ItemType
 
-  return filtered.sort((a, b) => {
-    if (filters.sort.type === "desc") {
+  return items.sort((a, b) => {
+    if (filter.type === "desc") {
       const tmp = a
       a = b
       b = tmp

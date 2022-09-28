@@ -70,6 +70,7 @@ interface MovieCardProps {
   onClick: () => void
 }
 
+// Display card with basic information about movie
 const MovieCard = (props: MovieCardProps): JSX.Element => {
   const { movie, playable, onClick } = props
 

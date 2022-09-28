@@ -10,7 +10,7 @@ const parseAttributeValue = (value: string | number | boolean) => {
 }
 
 /**
- * Function generates menu with specific filters based on values available in data
+ * Extracts all possible values of specific filter attributes from data
  * Supports object property @type { string | number | boolean}
  *  - object properties with different type are ignored
  */

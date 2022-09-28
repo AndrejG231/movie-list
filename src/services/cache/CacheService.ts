@@ -7,10 +7,18 @@ class CacheService {
     localStorage.setItem(cacheKey, value)
   }
 
+  /**
+   * Try to retrieve data by specified callback, and save it to cache
+   * Returns cached version of data if validation fails
+   *
+   * @param cacheKey access key to the cache
+   * @param caller callback for retrieving specific data
+   * @param validator callback for validating
+   */
   async retrieveWithCache<Data>(
-    cacheKey: string, // Access key to the cache
-    caller: () => Promise<Data>, // Callback for retrieving specific data
-    validator: (data: Data | null | undefined) => data is Data // Callback for validating
+    cacheKey: string,
+    caller: () => Promise<Data>,
+    validator: (data: Data | null | undefined) => data is Data
   ) {
     const response = await caller()
 

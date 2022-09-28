@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, useMemo } from "react"
+import React, { ChangeEventHandler, memo, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { movieListActions, movieListSelector } from "../../store"
 import { createAttributeFiltersMenu } from "./util"
@@ -40,9 +40,11 @@ const ATTRIBUTE_FILTER_KEYS: (keyof IMovie)[] = [
   "isFeatured",
   "disabled",
 ]
+
 const SORT_FILTER_KEYS = ["name"]
 
-const FiltersMenu = () => {
+// Component provides filtering menu, saves filter options to the store
+const FiltersMenu = memo(() => {
   const { filters, query } = useSelector(movieListSelector)
   const { data } = query
 
@@ -94,11 +96,10 @@ const FiltersMenu = () => {
       <div className="col">
         <h3 className="col-title">Filters:</h3>
         {Object.keys(attributeFilters).map((key) => (
-          <label htmlFor={key}>
+          <label htmlFor={key} key={key}>
             {key}
             <select
               name={key}
-              key={key}
               value={filters.attributes[key]?.toString() || ""}
               onChange={makeAttributeChangeHandler(key)}
             >
@@ -129,7 +130,7 @@ const FiltersMenu = () => {
           >
             <option label={"No sorting"} value={""} />
             {SORT_FILTER_KEYS.map((attr) => (
-              <option label={attr} value={attr} />
+              <option key={attr} label={attr} value={attr} />
             ))}
           </select>
         </label>
@@ -160,6 +161,6 @@ const FiltersMenu = () => {
       </div>
     </StyledFiltersMenu>
   )
-}
+})
 
 export default FiltersMenu
