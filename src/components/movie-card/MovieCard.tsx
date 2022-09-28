@@ -47,6 +47,15 @@ const StyledMovieCard = styled.div<StyledMovieCardProps>`
     text-overflow: ellipsis;
   }
 
+  .not-playable {
+    font-size: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: red;
+    background: rgba(0, 0, 0, 0.9);
+  }
+
   &:hover {
     transform: scale(1.1);
     > .description {
@@ -57,11 +66,12 @@ const StyledMovieCard = styled.div<StyledMovieCardProps>`
 
 interface MovieCardProps {
   movie: IMovie
+  playable?: boolean
   onClick: () => void
 }
 
 const MovieCard = (props: MovieCardProps): JSX.Element => {
-  const { movie, onClick } = props
+  const { movie, playable, onClick } = props
 
   return (
     <StyledMovieCard bgUrl={movie.iconUri} onClick={onClick}>
@@ -71,6 +81,7 @@ const MovieCard = (props: MovieCardProps): JSX.Element => {
           <p>{movie.description}</p>
         </div>
       )}
+      {!playable && <div className="not-playable">Not playable</div>}
     </StyledMovieCard>
   )
 }
