@@ -19,7 +19,7 @@ const initialState: State = {
   filters: {
     attributes: {},
     search: { value: "" },
-    sort: { attr: null, type: "asc" },
+    sort: { attr: "", type: "asc" },
   },
 }
 

@@ -1,16 +1,18 @@
-import React, { useCallback, useEffect } from "react"
+import React, { useCallback, useEffect, useMemo } from "react"
 import styled from "styled-components"
 import { useNavigate } from "react-router-dom"
 
 import {
   AppDispatch,
   movieListActions,
+  movieListFiltersSelector,
   movieListQuerySelector,
   useMovieListQuery,
 } from "../../store"
 import { useDispatch, useSelector } from "react-redux"
 import { MovieCard } from "../../components/movie-card"
 import { FiltersMenu } from "../../components/filters-menu"
+import { getFilteredMovieList } from "./util"
 
 const StyledMovieListPage = styled.div`
   width: 100%;
@@ -27,13 +29,21 @@ const StyledMovieListPage = styled.div`
 const MovieListPage = () => {
   const { data, loading, error } = useMovieListQuery()
 
+  const filters = useSelector(movieListFiltersSelector)
+
   const navigate = useNavigate()
+
+  const filteredMovies = useMemo(() => {
+    if (!data) return null
+
+    return getFilteredMovieList(data, filters)
+  }, [filters, data])
 
   if (loading) {
     return <div>Loading...</div>
   }
 
-  if (error || !data) {
+  if (error || !filteredMovies) {
     return <div>Error</div>
   }
 
@@ -41,7 +51,7 @@ const MovieListPage = () => {
     <StyledMovieListPage>
       <FiltersMenu />
       <div className="movie-list">
-        {data.map((movie) => {
+        {filteredMovies.map((movie) => {
           const isPlayable = !movie.drm || movie.drm?.indexOf("DEMO_CLEAR") > -1
 
           return (

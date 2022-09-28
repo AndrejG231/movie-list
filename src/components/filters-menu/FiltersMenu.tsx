@@ -1,8 +1,7 @@
 import React, { ChangeEventHandler, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { movieListActions, movieListSelector } from "../../store"
-import { getAttributeFiltersMenu } from "./util"
-import { createSelector } from "@reduxjs/toolkit"
+import { createAttributeFiltersMenu } from "./util"
 import { IMovie } from "../../services/api"
 import styled from "styled-components"
 import { SortFilter } from "../../store/movie-list/types"
@@ -36,7 +35,11 @@ const StyledFiltersMenu = styled.div`
   }
 `
 
-const ATTRIBUTE_FILTER_KEYS: (keyof IMovie)[] = ["isFeatured", "disabled"]
+const ATTRIBUTE_FILTER_KEYS: (keyof IMovie)[] = [
+  "source",
+  "isFeatured",
+  "disabled",
+]
 const SORT_FILTER_KEYS = ["name"]
 
 const FiltersMenu = () => {
@@ -46,7 +49,7 @@ const FiltersMenu = () => {
   const dispatch = useDispatch()
 
   const attributeFilters = useMemo(
-    () => data && getAttributeFiltersMenu(data, ATTRIBUTE_FILTER_KEYS),
+    () => data && createAttributeFiltersMenu(data, ATTRIBUTE_FILTER_KEYS),
     [data]
   )
 
@@ -96,13 +99,18 @@ const FiltersMenu = () => {
             <select
               name={key}
               key={key}
-              value={filters.attributes[key]?.toString() || 0}
+              value={filters.attributes[key]?.toString() || ""}
               onChange={makeAttributeChangeHandler(key)}
             >
+              <option label="All" value={""} />
               {Array.from(
                 attributeFilters[key as keyof typeof attributeFilters]!
-              ).map((option) => (
-                <option label={option?.toString()} value={Number(option)} />
+              ).map((option, i) => (
+                <option
+                  key={`option-${option.label}`}
+                  label={option.label}
+                  value={option.value}
+                />
               ))}
             </select>
           </label>
@@ -132,6 +140,7 @@ const FiltersMenu = () => {
             name={"attr"}
             value={filters.sort.type}
             onChange={handleSortTypeChange}
+            disabled={filters.sort.attr === ""}
           >
             <option label={"Ascending"} value={"asc"} />
             <option label={"Descending"} value={"desc"} />
