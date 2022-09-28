@@ -116,4 +116,4 @@ const fetchData = createAsyncThunk(
 
 export const reducer = movieListSlice.reducer
 
-export const actions = { setResults, startLoading, fetchData }
+export const actions = { ...movieListSlice.actions, fetchData }

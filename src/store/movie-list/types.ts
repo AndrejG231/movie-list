@@ -6,7 +6,7 @@ export type MovieListQueryState = {
   error: Error | null
 }
 
-export type AttributeFilters = Record<string, string | null>
+export type AttributeFilters = Record<string, string | number | boolean | null>
 
 export type SearchFilter = {
   value: string
