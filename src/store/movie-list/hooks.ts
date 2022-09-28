@@ -9,7 +9,7 @@ export const useMovieListQuery = () => {
 
   useEffect(() => {
     dispatch(movieListActions.fetchData())
-  }, [])
+  }, [dispatch])
 
   return useSelector(movieListQuerySelector)
 }

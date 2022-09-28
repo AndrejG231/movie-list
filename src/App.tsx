@@ -25,10 +25,6 @@ const router = createBrowserRouter([
   },
 ])
 
-const Router = () => {
-  return
-}
-
 function App() {
   return (
     <StoreProvider>

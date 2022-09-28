@@ -1,4 +1,3 @@
-import { IMovie } from "../../services/api"
 import {
   AttributeFilters,
   MovieListFilters,
