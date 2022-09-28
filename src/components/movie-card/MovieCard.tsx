@@ -57,13 +57,14 @@ const StyledMovieCard = styled.div<StyledMovieCardProps>`
 
 interface MovieCardProps {
   movie: IMovie
+  onClick: () => void
 }
 
 const MovieCard = (props: MovieCardProps): JSX.Element => {
-  const { movie } = props
+  const { movie, onClick } = props
 
   return (
-    <StyledMovieCard bgUrl={movie.iconUri}>
+    <StyledMovieCard bgUrl={movie.iconUri} onClick={onClick}>
       <h1 className="title">{movie.name}</h1>
       {movie.description && (
         <div className="description">
